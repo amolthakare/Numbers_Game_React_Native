@@ -1,47 +1,50 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TextInput, Alert } from "react-native";
+import { View, StyleSheet, TextInput, Alert, Text } from "react-native";
 import PrimaryButton from "../components/PrimaryButton";
 import Colors from "../constants/colors";
-function StartGameScreen({pickedNumber}) {
-    const [enteredNumber,setEnteredNumber] = useState('')
-    function handleInputNumber(enteredText){
-        setEnteredNumber(enteredText);
-    }
+import TitleText from "../components/TitleText";
+function StartGameScreen({ pickedNumber }) {
+  const [enteredNumber, setEnteredNumber] = useState("");
+  function handleInputNumber(enteredText) {
+    setEnteredNumber(enteredText);
+  }
 
-    function handleSaveButton(){
-        let number = parseInt(enteredNumber);
-        if(isNaN(number) || number<=0){
-            Alert.alert(
-                'Invalid Number!',
-                'Number has to be in between 0 to 99',
-                [{text:'Okay', style:'destructive', onPress:handleInputNumber}]
-            );
-            return;
-        }
-        pickedNumber(number)
+  function handleSaveButton() {
+    let number = parseInt(enteredNumber);
+    if (isNaN(number) || number <= 0) {
+      Alert.alert("Invalid Number!", "Number has to be in between 0 to 99", [
+        { text: "Okay", style: "destructive", onPress: handleInputNumber },
+      ]);
+      return;
     }
+    pickedNumber(number);
+  }
 
-    function handleResetButton(){
-        setEnteredNumber('');
-    }
+  function handleResetButton() {
+    setEnteredNumber("");
+  }
 
   return (
-    <View style={styles.inputContainer}>
-      <TextInput
-        style={styles.numberInput}
-        maxLength={2}
-        keyboardType="number-pad"
-        autoCapitalize="none"
-        autoCorrect={false}
-        onChangeText={handleInputNumber}
-        value={enteredNumber}
-      ></TextInput>
-      <View style={styles.buttonsContainer}>
-        <View style={styles.buttons}>
-          <PrimaryButton onPress={handleResetButton}>Reset</PrimaryButton>
-        </View>
-        <View style={styles.buttons}>
-          <PrimaryButton onPress={handleSaveButton}>Save</PrimaryButton>
+    <View style={styles.rootcontainer}>
+      <TitleText>Numbers Game</TitleText>
+      <View style={styles.inputContainer}>
+        <Text style={styles.text}>Enter a Number</Text>
+        <TextInput
+          style={styles.numberInput}
+          maxLength={2}
+          keyboardType="number-pad"
+          autoCapitalize="none"
+          autoCorrect={false}
+          onChangeText={handleInputNumber}
+          value={enteredNumber}
+        ></TextInput>
+        <View style={styles.buttonsContainer}>
+          <View style={styles.buttons}>
+            <PrimaryButton onPress={handleResetButton}>Reset</PrimaryButton>
+          </View>
+          <View style={styles.buttons}>
+            <PrimaryButton onPress={handleSaveButton}>Save</PrimaryButton>
+          </View>
         </View>
       </View>
     </View>
@@ -82,5 +85,14 @@ const styles = StyleSheet.create({
   buttons: {
     // width:100,
     flex: 1,
+  },
+  rootcontainer: {
+    marginTop: 100,
+    textAlign: "center",
+  },
+  text: {
+    color: Colors.primary500,
+    fontSize: 22,
+    fontWeight: "bold",
   },
 });

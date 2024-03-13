@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import TitleText from "../components/TitleText";
 import Number from "../components/NumberComponent";
 import PrimaryButton from "../components/PrimaryButton";
@@ -23,8 +30,9 @@ const GameScreen = ({ enteredNumber, onGameOver, totalCount }) => {
   const initialGuess = generateRandomBetween(1, 100, enteredNumber);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
   const [count, setCount] = useState(1);
-  const [guessedRounds,setGuessedRounds] = useState([initialGuess]);
-  console.log(guessedRounds);
+  const [guessedRounds, setGuessedRounds] = useState([initialGuess]);
+  // console.log(guessedRounds);
+  const { width, height } = useWindowDimensions();
   useEffect(() => {
     if (currentGuess === enteredNumber) {
       onGameOver();
@@ -32,7 +40,7 @@ const GameScreen = ({ enteredNumber, onGameOver, totalCount }) => {
   }, [currentGuess, enteredNumber, onGameOver]);
 
   function nextGuessHandler(direction) {
-    setCount(guessRoundsListLength+2);
+    setCount(guessRoundsListLength + 2);
     totalCount(count);
     if (
       (direction === "lower" && currentGuess < enteredNumber) ||
@@ -56,14 +64,13 @@ const GameScreen = ({ enteredNumber, onGameOver, totalCount }) => {
       currentGuess
     );
     setCurrentGuess(newRandomNumber);
-    setGuessedRounds((prev=> [newRandomNumber,...prev]));
+    setGuessedRounds((prev) => [newRandomNumber, ...prev]);
   }
 
   const guessRoundsListLength = guessedRounds.length;
 
-  return (
-    <View style={styles.screen}>
-      <TitleText>Opponents Choice</TitleText>
+  let content = (
+    <>
       <Number>{currentGuess}</Number>
       <Text style={styles.text}>Higher or Lower?</Text>
       <View style={styles.buttonsContainer}>
@@ -78,6 +85,33 @@ const GameScreen = ({ enteredNumber, onGameOver, totalCount }) => {
           </PrimaryButton>
         </View>
       </View>
+    </>
+  );
+
+  if (width > 500) {
+    content = (
+      <>
+        <View style={styles.buttonsContainer}>
+          <View style={styles.buttons}>
+            <PrimaryButton onPress={nextGuessHandler.bind(this, "lower")}>
+              <Ionicons name="remove" size={24} color="white" />
+            </PrimaryButton>
+          </View>
+          <Number>{currentGuess}</Number>
+          <View style={styles.buttons}>
+            <PrimaryButton onPress={nextGuessHandler.bind(this, "greater")}>
+              <Ionicons name="add" size={24} color="white" />
+            </PrimaryButton>
+          </View>
+        </View>
+      </>
+    );
+  }
+
+  return (
+    <View style={styles.screen}>
+      <TitleText>Opponents Choice</TitleText>
+      {content}
       <View style={styles.listContainer}>
         <FlatList
           data={guessedRounds}
@@ -98,12 +132,13 @@ export default GameScreen;
 
 const styles = StyleSheet.create({
   screen: {
-    flex:1,
+    flex: 1,
     padding: 24,
-    marginTop: 10,
+    alignItems:'center'
   },
   buttonsContainer: {
     flexDirection: "row",
+    alignItems:'center'
   },
   buttons: {
     // width:100,

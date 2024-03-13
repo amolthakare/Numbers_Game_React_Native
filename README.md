@@ -35,4 +35,5 @@ npm start
 - Continue guessing until you correctly identify the chosen number.
 - Game statistics will be displayed at the end, allowing you to start a new game.
 
+## Contribution
 Feel free to customize and enhance the app based on your preferences and requirements. Happy gaming!
